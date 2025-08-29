@@ -1,0 +1,61 @@
+################################################################
+# CAP IIb - Datos cuantitativos: Dispersión y asimetría
+# Objetivo: rango, RIQ, varianza, desviación estándar y asimetría 
+# Fuente: trunk-control.csv (seleccionar con file.choose())
+# Autor: Dante Baldeon Molleda | Fecha: 25/08/2025
+################################################################
+
+# Carga de datos
+datos.control <- read.csv(file.choose())
+cat("Dimensiones (filas x columnas):", paste(dim(datos.control), collapse = "x"), "\n")
+head(datos.control)
+
+# Ensayo 1
+datos.0 <- datos.control[datos.control$time == 1, ]
+y <- datos.0$Y  # si fuese necesario: y <- na.omit(y)
+
+# Rango
+cat("\nRango (min, max):\n")
+range(y)
+
+cat("\nY ordenado (ascendente):\n")
+y[order(y, decreasing = FALSE)]
+
+# Rango intercuartil
+cat("\nRIQ (IQR de Y):\n")
+IQR(y)
+
+cat("\nCuartiles (Q1, Q3):\n")
+quantile(y, probs = c(0.25, 0.75))
+
+#
+# Varianza y desviación estándar
+#
+cat("\nVarianza de Y:\n")
+var(y)
+
+cat("\nDesviación estándar de Y:\n")
+sd(y)
+
+#
+# Asimetria
+#
+Pearson.asi <- function(x)  3 * (mean(x, na.rm = TRUE) - median(x, na.rm = TRUE)) / sd(x, na.rm = TRUE)
+Fisher.asi  <- function(x)  mean((x - mean(x, na.rm = TRUE))^3, na.rm = TRUE) / sd(x, na.rm = TRUE)^3
+
+cat("\nPruebas de asimetría con vectores de ejemplo (1:7):\n")
+Pearson.asi(c(1,2,3,4,5,6,7))
+Fisher.asi(c(1,2,3,4,5,6,7))
+
+cat("\nPruebas de asimetría con vectores de ejemplo (1,2,3,4,5,10,50):\n")
+Pearson.asi(c(1,2,3,4,5,10,50))
+Fisher.asi(c(1,2,3,4,5,10,50))
+
+cat("\nMedia y mediana de Y:\n")
+c(mean(y), median(y))
+
+cat("\nAsimetría de Pearson (Y):\n")
+Pearson.asi(y)
+
+cat("\nAsimetría de Fisher (Y):\n")
+Fisher.asi(y)
